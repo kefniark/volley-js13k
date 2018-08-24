@@ -1,11 +1,8 @@
-export interface IEntity {
-	x: number;
-	y: number;
-	z: number;
-	angle: number;
-	scale: number;
-	alpha: number;
+import { Transform } from '../components/transform';
+import { IComponent } from './IComponent';
 
-	update(time: number, dt: number): void;
-	render(): void;
+export interface IEntity extends IComponent {
+	transform: Transform;
+	components: IComponent[];
+	childrens: IEntity[];
 }
