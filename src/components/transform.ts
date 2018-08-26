@@ -5,7 +5,6 @@ export interface ITransformOptions {
 	scale?: number;
 	alpha?: number;
 	angle?: number;
-	update?: (time: number, dt: number) => void;
 }
 
 export class Transform {

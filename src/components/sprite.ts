@@ -1,55 +1,19 @@
 import { Component } from './component';
 
-// import { IEntity } from '../interfaces/IEntity';
-
-// export class Sprite implements IEntity {
-// 	private img: HTMLImageElement;
-// 	private ctx: CanvasRenderingContext2D;
-// 	private ready = false;
-// 	public x = 0;
-// 	public y = 0;
-// 	public z = 0;
-// 	public scale = 1;
-// 	public angle = 0;
-// 	public alpha = 1;
-// 	constructor(ctx: CanvasRenderingContext2D, path: string) {
-// 		this.ctx = ctx;
-// 		this.img = new Image();
-// 		this.img.onload = () => this.ready = true;
-// 		this.img.src = path;
-// 	}
-
-// 	public addUpdate(cb: (time: number, dt: number) => void) {
-// 		this.updates.push(cb);
-// 	}
-
-// 	public update(time: number, dt: number): void {
-// 		this.updates.forEach((cb) => cb(time, dt));
-// 	}
-
-// 	public render() {
-// 		if (!this.ready || this.alpha <= 0 || this.scale <= 0) return;
-// 		this.ctx.translate(this.x, this.y);
-// 		if (this.angle !== 0) this.ctx.rotate(this.angle);
-// 		if (this.alpha < 1) this.ctx.globalAlpha = this.alpha;
-// 		this.ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2, this.img.width * this.scale, this.img.height * this.scale);
-// 		if (this.alpha < 1) this.ctx.globalAlpha = 1;
-// 		if (this.angle !== 0) this.ctx.rotate(-this.angle);
-// 		this.ctx.translate(-this.x, -this.y);
-// 	}
-// }
-
 export class Sprite extends Component {
 	private img: HTMLImageElement;
+	private x: number;
+	private y: number;
 
-	constructor(ctx: CanvasRenderingContext2D, path: string) {
+	constructor(ctx: CanvasRenderingContext2D, path: string, offx: number = 0, offy: number = 0) {
 		super(ctx);
-		this.img = new Image();
-		this.img.onload = () => this.active = true;
-		this.img.src = path;
+		if (!(window as any).loader.sprites[path]) throw new Error('sprite not loaded' + path);
+		this.img = (window as any).loader.sprites[path];
+		this.x = offx;
+		this.y = offy;
 	}
 
-	public render(scale: number, alpha: number) {
-		this.ctx.drawImage(this.img, -this.img.width / 2, -this.img.height / 2, this.img.width * scale, this.img.height * scale);
+	public render(a: number) {
+		this.ctx.drawImage(this.img, -this.img.width / 2 + this.x, -this.img.height / 2 + this.y, this.img.width, this.img.height);
 	}
 }

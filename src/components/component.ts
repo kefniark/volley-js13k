@@ -5,12 +5,12 @@ export class Component implements IComponent {
 	protected active = false;
 	protected ctx: CanvasRenderingContext2D;
 	protected updates: ((time: number, dt: number) => void)[] = [];
-	public entity?: IEntity;
+	public e?: IEntity;
 
 	constructor(ctx: CanvasRenderingContext2D) {
 		this.ctx = ctx;
 	}
 
 	public update(time: number, dt: number) {}
-	public render(scale: number, alpha: number) {}
+	public render(alpha: number) {}
 }

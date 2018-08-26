@@ -1,6 +1,5 @@
 
 var path = require('path')
-var webpack = require('webpack')
 var HtmlWebpackPlugin = require('html-webpack-plugin')
 var CopyWebpackPlugin = require('copy-webpack-plugin')
 
@@ -12,6 +11,7 @@ module.exports = {
     chunkFilename: '[name].bundle.js',
     path: path.resolve(__dirname, './dist')
   },
+  devtool: false,
   module: {
     rules: [
       {
@@ -32,7 +32,8 @@ module.exports = {
     new HtmlWebpackPlugin({
       title: 'My App',
       template: 'src/index.html',
-      inject: 'body'
+	  inject: 'body',
+	  minify: true
     }),
     new CopyWebpackPlugin([
       { from: 'src/assets', to: 'assets', type: 'dir' },
@@ -42,6 +43,8 @@ module.exports = {
     extensions: ['.ts', '.js', '.vue', '.json', '.less'],
   },
   devServer: {
+	stats: 'minimal',
+    overlay: true,
     contentBase: path.join(__dirname, 'dist'),
     compress: true,
     port: 9000

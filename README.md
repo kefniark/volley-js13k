@@ -1,7 +1,7 @@
-# Test
+# Minimalist Volley
 
 ## Description
-Try to make a game in the 13KB limit
+Try to make a small volley game in the 13KB limit (http://js13kgames.com/)
 
 ## Commands
 Setup

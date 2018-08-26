@@ -5,29 +5,35 @@ import { IComponent } from '../interfaces/IComponent';
 import { IEntity } from '../interfaces/IEntity';
 
 export class Entity extends Component implements IEntity {
-	public name = '';
-	public transform: Transform;
-	private t: Transform;
-	public components: IComponent[] = [];
-	public childrens: IEntity[] = [];
+	public t: Transform;
+	public c: IComponent[] = [];
+	private childrens: IEntity[] = [];
 
 	constructor(ctx: CanvasRenderingContext2D) {
 		super(ctx);
 		this.active = true;
-		this.transform = new Transform();
 		this.t = new Transform();
 	}
 
-	public addComp(component: IComponent) {
-		component.entity = this;
-		this.components.push(component);
+	public get<T extends Component>(t: string): T | undefined {
+		for (const c of this.c) {
+			if (typeof(c) === t) {
+				return c as T;
+			}
+		}
+		return undefined;
 	}
 
-	public deleteComp(component: IComponent) {
-		component.entity = undefined;
-		const index = this.components.indexOf(component);
+	public add(component: IComponent) {
+		component.e = this;
+		this.c.push(component);
+	}
+
+	public del(component: IComponent) {
+		component.e = undefined;
+		const index = this.c.indexOf(component);
 		if (index !== -1) {
-			this.components.splice(index, 1);
+			this.c.splice(index, 1);
 		}
 	}
 
@@ -35,7 +41,7 @@ export class Entity extends Component implements IEntity {
 		this.childrens.push(entity);
 	}
 
-	public deleteChild(entity: IEntity) {
+	public delChild(entity: IEntity) {
 		const index = this.childrens.indexOf(entity);
 		if (index !== -1) {
 			this.childrens.splice(index, 1);
@@ -44,33 +50,43 @@ export class Entity extends Component implements IEntity {
 
 	public update(time: number, dt: number) {
 		if (!this.active) return;
-		this.components.forEach((el) => el.update(time, dt));
+		this.c.forEach((el) => el.update(time, dt));
 		this.childrens.forEach((el) => el.update(time, dt));
 	}
 
-	public createSpriteEntity(path: string, options?: ITransformOptions): IEntity {
+	public instSprite(path: string, options?: ITransformOptions, x: number = 0, y: number = 0): IEntity {
 		const entity = new Entity(this.ctx);
-		entity.transform.set(options);
-		const sprite = new Sprite(this.ctx, path);
-		entity.addComp(sprite);
+		entity.t.set(options);
+		const sprite = new Sprite(this.ctx, path, x, y);
+		entity.add(sprite);
 		this.addChild(entity);
 		return entity;
 	}
 
-	public render(scale: number, alpha: number) {
+	public instEntity(options?: ITransformOptions): Entity {
+		const entity = new Entity(this.ctx);
+		entity.t.set(options);
+		this.addChild(entity);
+		return entity;
+	}
+
+	public render(alpha: number) {
 		if (!this.active) return;
 
-		console.log(this.name, this.transform);
-		this.ctx.translate(this.transform.x * scale, this.transform.y * scale);
-		if (this.transform.angle !== 0) this.ctx.rotate(this.transform.angle);
-		if (this.transform.alpha < 1) this.ctx.globalAlpha = this.transform.alpha;
+		const a = alpha * this.t.alpha;
 
-		this.components.forEach((el) => el.render(scale * this.transform.scale, alpha * this.transform.alpha));
-		this.childrens.sort((a: IEntity, b: IEntity) => a.transform.z > b.transform.z ? 1 : -1);
-		this.childrens.forEach((el) => el.render(scale * this.transform.scale, alpha * this.transform.alpha));
+		this.ctx.translate(this.t.x, this.t.y);
+		if (this.t.angle !== 0) this.ctx.rotate(this.t.angle);
+		if (this.t.scale !== 1) this.ctx.scale(this.t.scale, this.t.scale);
+		if (this.t.alpha < 1) this.ctx.globalAlpha = a;
 
-		if (this.transform.alpha < 1) this.ctx.globalAlpha = 1;
-		if (this.transform.angle !== 0) this.ctx.rotate(-this.transform.angle);
-		this.ctx.translate(-this.transform.x * scale, -this.transform.y * scale);
+		this.c.forEach((el) => el.render(a));
+		this.childrens.sort((e1: IEntity, e2: IEntity) => e1.t.z > e2.t.z ? 1 : -1);
+		this.childrens.forEach((el) => el.render(a));
+
+		if (this.t.alpha < 1) this.ctx.globalAlpha = 1;
+		if (this.t.scale !== 1) this.ctx.scale(1 / this.t.scale, 1 / this.t.scale);
+		if (this.t.angle !== 0) this.ctx.rotate(-this.t.angle);
+		this.ctx.translate(-this.t.x, -this.t.y);
 	}
 }

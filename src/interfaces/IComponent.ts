@@ -1,9 +1,8 @@
-import { Transform } from '../components/transform';
 import { IEntity } from './IEntity';
 
 export interface IComponent {
-	entity?: IEntity;
+	e?: IEntity;
 
 	update(time: number, dt: number): void;
-	render(scale: number, alpha: number): void;
+	render(alpha: number): void;
 }
