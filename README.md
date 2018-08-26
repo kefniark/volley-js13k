@@ -7,11 +7,11 @@ Don't look too much at the code quality / readability for the moment
 The game is automatically deployed on https://kefniark.github.io/volley-js13k/
 
 ## Description
-Try to make a small volley game for the js13kgames competition (http://js13kgames.com/)
+Minimalist volley game for the [js13kgames competition]((http://js13kgames.com/))
 
-My idea:
+## Idea
  * The theme is "Offline", it's summer ... time to go outside and do some sport no?
- * Inspired by (Blobby volley)[https://en.wikipedia.org/wiki/Blobby_Volley], a game I played clearly too much back in the day.
+ * Inspired by [Blobby volley](https://en.wikipedia.org/wiki/Blobby_Volley), a game I played clearly too much back in the day.
  * Minimalist design with vector graphics.
 
 ## Rules
