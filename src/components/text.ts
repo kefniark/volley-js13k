@@ -1,17 +1,18 @@
+import { IScene } from '../interfaces/IScene';
 import { Component } from './component';
 
 export class Text extends Component {
 	public text: string;
-	constructor(ctx: CanvasRenderingContext2D, text: string) {
-		super(ctx);
+	constructor(s: IScene, text: string) {
+		super(s);
 		this.text = text;
 	}
 
 	public render(a: number) {
 		super.render(a);
-		this.ctx.font = 'bold 30px impact';
-		this.ctx.fillStyle = 'white';
-		this.ctx.textAlign = 'center';
-		this.ctx.fillText(this.text, 0, 0);
+		this.s.ctx.font = 'bold 30px impact';
+		this.s.ctx.fillStyle = 'white';
+		this.s.ctx.textAlign = 'center';
+		this.s.ctx.fillText(this.text, 0, 0);
 	}
 }

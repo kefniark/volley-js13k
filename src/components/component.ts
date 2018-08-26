@@ -1,16 +1,17 @@
 import { IComponent } from '../interfaces/IComponent';
 import { IEntity } from '../interfaces/IEntity';
+import { IScene } from '../interfaces/IScene';
 
 export class Component implements IComponent {
 	protected active = false;
-	protected ctx: CanvasRenderingContext2D;
 	protected updates: ((time: number, dt: number) => void)[] = [];
+	public s: IScene;
 	public e?: IEntity;
 
-	constructor(ctx: CanvasRenderingContext2D) {
-		this.ctx = ctx;
+	constructor(s: IScene) {
+		this.s = s;
 	}
 
-	public update(time: number, dt: number) {}
-	public render(alpha: number) {}
+	public update(t: number, dt: number) {}
+	public render(a: number) {}
 }

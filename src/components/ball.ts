@@ -1,20 +1,22 @@
+import { IScene } from '../interfaces/IScene';
 import { Component } from './component';
 
 export class Ball extends Component {
 	public radius = 10;
 
-	public bounceCb: (() => void) | undefined;
-	public groundCb: (() => void) | undefined;
+	// events
+	public eBounceCb: (() => void) | undefined;
+	public eGround: (() => void) | undefined;
 
-	private floor: number;
+	private readonly floor: number;
 	private vv = 0;
 	private hv = 1;
 	private play: boolean;
 	private grounded = false;
 	private wasGrounded = false;
 
-	constructor(ctx: CanvasRenderingContext2D, floor: number) {
-		super(ctx);
+	constructor(s: IScene, floor: number) {
+		super(s);
 		this.floor = floor;
 		this.play = false;
 		this.wasGrounded = false;
@@ -34,9 +36,8 @@ export class Ball extends Component {
 
 	public set(h: number, v: number) {
 		this.play = true;
-		console.log(this.hv, this.vv, h, v, this.grounded, this.play);
 		if (this.grounded) return;
-		if (this.bounceCb) this.bounceCb();
+		if (this.eBounceCb) this.eBounceCb();
 		this.hv = h * 0.26;
 		this.vv = v * 0.27;
 		const e = this.e;
@@ -49,7 +50,6 @@ export class Ball extends Component {
 	public update(time: number, dt: number) {
 		const e = this.e;
 		if (!e || !this.play) return;
-		console.log('ball playing', this.play, this.grounded, this.wasGrounded);
 		this.vv -= 0.012 * dt;
 		e.t.x += this.hv;
 		e.t.y -= this.vv;
@@ -58,19 +58,19 @@ export class Ball extends Component {
 			this.hv *= 0.5;
 
 			this.grounded = true;
-			if (this.bounceCb && !this.wasGrounded) this.bounceCb();
-			if (this.groundCb && !this.wasGrounded) this.groundCb();
+			if (this.eBounceCb && !this.wasGrounded) this.eBounceCb();
+			if (this.eGround && !this.wasGrounded) this.eGround();
 			this.wasGrounded = true;
 		}
 		if (e.t.x <= 0) {
 			e.t.x = 0;
 			this.hv *= -1;
-			if (this.bounceCb) this.bounceCb();
+			if (this.eBounceCb) this.eBounceCb();
 		}
 		if (e.t.x >= 640) {
 			e.t.x = 640;
 			this.hv *= -1;
-			if (this.bounceCb) this.bounceCb();
+			if (this.eBounceCb) this.eBounceCb();
 		}
 		if (e.t.x >= 300 && e.t.x <= 340 && e.t.y > 170) {
 			if (e.t.y < 175) {
@@ -78,7 +78,7 @@ export class Ball extends Component {
 			} else {
 				this.hv = Math.abs(this.hv) * Math.sign(e.t.x - 320);
 			}
-			if (this.bounceCb) this.bounceCb();
+			if (this.eBounceCb) this.eBounceCb();
 		}
 		if (e.t.y > this.floor) e.t.y = this.floor;
 	}

@@ -39,4 +39,4 @@ npm run build
 ![Screenshot](preview.jpg)
 
 ## License
-(WTFPL)[http://www.wtfpl.net/about/]
+[WTFPL](http://www.wtfpl.net/about/)

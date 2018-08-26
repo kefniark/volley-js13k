@@ -25,7 +25,7 @@
             //     for(i in D=[25,,,,,,,,,,,,25,,,25,,,,,,,,,,,,,,,,25,,,,,,,,,,,,25,,,25,,,,,,,,,,,,25,,,,,,,,25])
             //     with(createOscillator())
             //     if(D[i])
-            //     connect(G),
+            //     connect(G),d
             //     G.connect(destination),
             //     start(i*.1),
             //     frequency.setValueAtTime(110*1.06**(13-D[i]),i*.1),
@@ -38,6 +38,7 @@
         </script>
     </head>
     <body>
+        <button id="play">Play</button>
         <canvas id="background" width="640" height="360"></canvas>
         <canvas id="game" width="640" height="360"></canvas>
     </body>

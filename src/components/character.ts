@@ -1,17 +1,18 @@
+import { IScene } from '../interfaces/IScene';
 import { Component } from './component';
 
 export class Character extends Component {
-	public radius = 30;
-	private min: number;
-	private max: number;
+	public readonly radius = 30;
+	private readonly min: number;
+	private readonly max: number;
 	private defaultY = -1;
 	private next = 0;
 	private vv = 0;
 	private jumped = 0;
 	public jumpCb: (() => void) | undefined;
 
-	constructor(ctx: CanvasRenderingContext2D, min: number, max: number) {
-		super(ctx);
+	constructor(s: IScene, min: number, max: number) {
+		super(s);
 		this.min = min;
 		this.max = max;
 	}

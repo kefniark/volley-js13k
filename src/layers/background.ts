@@ -1,15 +1,17 @@
 import { Entity } from '../entities/entity';
+import { IScene } from '../interfaces/IScene';
 
-export class Background extends Entity {
-
+export class Background extends Entity implements IScene {
 	public can: HTMLCanvasElement;
-	public get context() { return this.ctx; }
+	public ctx: CanvasRenderingContext2D;
 	public r = false;
 
 	constructor(can: HTMLCanvasElement, ctx: CanvasRenderingContext2D) {
-		super(ctx);
+		super(undefined as any);
+		this.s = this;
 
 		this.can = can;
+		this.ctx = ctx;
 		for (let i = 0; i < 200; i++) {
 			this.instSprite('assets/background.svg', {
 				x: 320,

@@ -1,8 +1,10 @@
 import { IEntity } from './IEntity';
+import { IScene } from './IScene';
 
 export interface IComponent {
+	s: IScene;
 	e?: IEntity;
 
-	update(time: number, dt: number): void;
-	render(alpha: number): void;
+	update(t: number, dt: number): void;
+	render(a: number): void;
 }
