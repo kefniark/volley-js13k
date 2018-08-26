@@ -2,9 +2,14 @@ import { loader } from '..';
 import { Ball } from '../components/ball';
 import { Character } from '../components/character';
 import { Text } from '../components/text';
-import { Transform } from '../components/transform';
 import { Entity } from '../entities/entity';
 import { IScene } from '../interfaces/IScene';
+import { ITransform } from '../interfaces/ITransform';
+
+const xl = 150;
+const xr = 640 - 150;
+const yl = 200;
+const w = 800;
 
 export class Scene extends Entity implements IScene {
 
@@ -31,23 +36,23 @@ export class Scene extends Entity implements IScene {
 		super(undefined as any);
 		this.s = this;
 
-		this.audioHit = loader.audio['assets/hit.wav'];
-		this.audioJump = loader.audio['assets/jump.wav'];
+		this.audioHit = loader.audio[loader.a[0]];
+		this.audioJump = loader.audio[loader.a[1]];
 		this.audioJump.volume = 0.001;
 
 		this.can = can;
 		this.ctx = ctx;
 
-		this.cloud = this.instSprite('assets/cloud.svg', { x: Math.random() * 800, y: 30, s: 0.28, a: 0.9, r: 0 }) as Entity;
-		this.cloud2 = this.instSprite('assets/cloud.svg', { x: Math.random() * 800, y: 28, s: 0.22, a: 0.75 }) as Entity;
-		this.cloud3 = this.instSprite('assets/cloud.svg', { x: Math.random() * 800, y: 15, s: 0.13, a: 0.6 }) as Entity;
+		this.cloud = this.instSprite(loader.s[2], { x: Math.random() * w, y: 30, s: 0.28, a: 0.9, r: 0 }) as Entity;
+		this.cloud2 = this.instSprite(loader.s[2], { x: Math.random() * w, y: 28, s: 0.22, a: 0.75 }) as Entity;
+		this.cloud3 = this.instSprite(loader.s[2], { x: Math.random() * w, y: 15, s: 0.13, a: 0.6 }) as Entity;
 
-		const p1 = this.instSprite('assets/player.svg', { x: 150, y: 265, z: 2, s: 0.75 }, -2, 6) as Entity;
+		const p1 = this.instSprite(loader.s[3], { x: xl, y: 265, z: 2, s: 0.75 }, -2, 6) as Entity;
 		this.player1 = new Character(this.s, 5, 302);
 		this.player1.jumpCb = () => this.audioJump.play();
 		p1.add(this.player1);
 
-		const p2 = this.instSprite('assets/player.svg', { x: 450, y: 265, z: 2, s: 0.75 }, -2, 6) as Entity;
+		const p2 = this.instSprite(loader.s[3], { x: 450, y: 265, z: 2, s: 0.75 }, -2, 6) as Entity;
 		this.player2 = new Character(this.s, 338, 640 - 5);
 		this.player2.jumpCb = () => this.audioJump.play();
 		p2.add(this.player2);
@@ -56,7 +61,7 @@ export class Scene extends Entity implements IScene {
 
 		this.current = this.player1;
 
-		const b = this.instSprite('assets/ball.svg', { x: 320, y: 1000, z: 10, s: 0.75 }, 30, -50) as Entity;
+		const b = this.instSprite(loader.s[1], { x: 320, y: 1000, z: 10, s: 0.75 }, 30, -50) as Entity;
 		this.ball = new Ball(this.s, 290);
 		b.add(this.ball);
 		this.ball.eBounceCb = () => this.audioHit.play();
@@ -75,8 +80,8 @@ export class Scene extends Entity implements IScene {
 		document.addEventListener('keyup', (e) => this.inputU(e), false);
 
 		this.current = Math.random() >= 0.5 ? this.player1 : this.player2;
-		if (this.current === this.player1) this.ball.reset(150, 200);
-		else this.ball.reset(640 - 150, 200);
+		if (this.current === this.player1) this.ball.reset(xl, yl);
+		else this.ball.reset(xr, yl);
 
 		if (this.current === this.player1) this.score1.text += ' .';
 		else this.score2.text += ' .';
@@ -96,8 +101,8 @@ export class Scene extends Entity implements IScene {
 		if (this.current === this.player1) this.score1.text += ' .';
 		else this.score2.text += ' .';
 
-		if (this.current === this.player1) this.ball.reset(150, 200);
-		else this.ball.reset(640 - 150, 200);
+		if (this.current === this.player1) this.ball.reset(xl, yl);
+		else this.ball.reset(xr, yl);
 	}
 
 	private inputD(e: KeyboardEvent) {
@@ -127,34 +132,32 @@ export class Scene extends Entity implements IScene {
 
 		this.cloud.t.x -= dt * 0.005;
 		this.cloud.t.y = 30 + Math.sin(time / 10000) * 10;
-		if (this.cloud.t.x < -100) this.cloud.t.x += 800;
+		if (this.cloud.t.x < -100) this.cloud.t.x += w;
 		this.cloud2.t.x -= dt * 0.003;
 		this.cloud2.t.y = 28 + Math.sin(time / 20000) * 5;
-		if (this.cloud2.t.x < -100) this.cloud2.t.x += 800;
+		if (this.cloud2.t.x < -100) this.cloud2.t.x += w;
 		this.cloud3.t.x -= dt * 0.0015;
 		this.cloud3.t.y = 15 + Math.sin(time / 30000) * 3;
-		if (this.cloud3.t.x < -100) this.cloud3.t.x += 800;
+		if (this.cloud3.t.x < -100) this.cloud3.t.x += w;
 
 		this.collision();
 	}
 
-	private distance(t1: Transform, t2: Transform) {
+	private distance(t1: ITransform, t2: ITransform) {
 		const a = t1.x - t2.x;
 		const b = t1.y - t2.y;
 		return Math.sqrt(a * a + b * b);
 	}
 
 	private collision() {
-		const p1 = this.player1.e;
-		const p2 = this.player2.e;
 		const b = this.ball.e;
-		if (!p1 || !p2 || !b) return;
+		for (const p of [this.player1, this.player2]) {
+			const p1 = p.e;
+			if (!p1 || !b) return;
 
-		if (this.distance(b.t, p1.t) < this.ball.radius + this.player1.radius) {
-			this.ball.set(b.t.x - p1.t.x, p1.t.y - b.t.y);
-		}
-		if (this.distance(b.t, p2.t) < this.ball.radius + this.player2.radius) {
-			this.ball.set(b.t.x - p2.t.x, p2.t.y - b.t.y);
+			if (this.distance(b.t, p1.t) < this.ball.radius + this.player1.radius) {
+				this.ball.set(b.t.x - p1.t.x, p1.t.y - b.t.y);
+			}
 		}
 	}
 

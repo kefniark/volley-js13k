@@ -1,3 +1,4 @@
+import { loader } from '..';
 import { Entity } from '../entities/entity';
 import { IScene } from '../interfaces/IScene';
 
@@ -13,7 +14,7 @@ export class Background extends Entity implements IScene {
 		this.can = can;
 		this.ctx = ctx;
 		for (let i = 0; i < 200; i++) {
-			this.instSprite('assets/background.svg', {
+			this.instSprite(loader.s[0], {
 				x: 320,
 				y: 180
 			});

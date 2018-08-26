@@ -1,5 +1,7 @@
 export class Loader {
+	public s = ['assets/background.svg', 'assets/ball.svg', 'assets/cloud.svg', 'assets/player.svg'];
 	public sprites: { [id: string]: HTMLImageElement } = {};
+	public a = ['assets/hit.wav', 'assets/jump.wav'];
 	public audio: { [id: string]: HTMLAudioElement } = {};
 
 	public load(cb: () => void) {
@@ -7,9 +9,8 @@ export class Loader {
 	}
 
 	private preloadImg(cb: () => void) {
-		const assets = ['assets/background.svg', 'assets/ball.svg', 'assets/cloud.svg', 'assets/player.svg'];
-		let toLoad = assets.length;
-		for (const asset of assets) {
+		let toLoad = this.s.length;
+		for (const asset of this.s) {
 			const img = new Image();
 			img.onload = () => {
 				toLoad--;
@@ -21,9 +22,8 @@ export class Loader {
 	}
 
 	private preloadAudio(cb: () => void) {
-		const assets = ['assets/hit.wav', 'assets/jump.wav'];
-		let toLoad = assets.length;
-		for (const asset of assets) {
+		let toLoad = this.a.length;
+		for (const asset of this.a) {
 			const audio = new Audio();
 			audio.onload = () => {
 				toLoad--;
