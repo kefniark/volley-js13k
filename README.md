@@ -1,7 +1,11 @@
 # Minimalist Volley
 
+Currently in development ^^
+Don't look too much at the code quality / readability for the moment
+
 ## Description
 Try to make a small volley game in the 13KB limit (http://js13kgames.com/)
+
 
 ## Commands
 Setup
